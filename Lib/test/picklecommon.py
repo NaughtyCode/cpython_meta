@@ -243,6 +243,9 @@ else:
     class MyUnicode(unicode):
         sample = unicode(r"hello \u1234", "raw-unicode-escape")
 
+class DictKey:
+    pass
+
 class MyTuple(tuple):
     sample = (1, 2, 3)
 
@@ -262,6 +265,17 @@ myclasses = [MyInt, MyLong, MyFloat,
              MyComplex,
              MyStr, MyUnicode,
              MyTuple, MyList, MyDict, MySet, MyFrozenSet]
+
+try:
+    frozendict
+except NameError:
+    # Python 3.14 and older
+    pass
+else:
+    class MyFrozenDict(dict):
+        sample = frozendict({"a": 1, "b": 2})
+    myclasses.append(MyFrozenDict)
+
 
 # For test_newobj_overridden_new
 class MyIntWithNew(int):
