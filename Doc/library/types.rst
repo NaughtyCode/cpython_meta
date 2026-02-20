@@ -521,6 +521,44 @@ Additional Utility Classes and Functions
 
    .. versionadded:: 3.4
 
+.. function:: lookup_special_method(obj, attr, /)
+
+     Lookup special method name ``attr`` on ``obj``.
+
+     Lookup method ``attr`` on ``obj`` without looking in the instance
+     dictionary. For methods defined in class ``__dict__`` or ``__slots__``, it
+     returns the unbound function (descriptor), not a bound method. The
+     caller is responsible for passing the object as the first argument when
+     calling it:
+
+     .. code-block:: python
+
+         >>> class A:
+         ...    def __enter__(self):
+         ...        return "A.__enter__"
+         ...
+         >>> class B:
+         ...    __slots__ = ("__enter__",)
+         ...    def __init__(self):
+         ...        def __enter__(self):
+         ...            return "B.__enter__"
+         ...        self.__enter__ = __enter__
+         ...
+         >>> a = A()
+         >>> b = B()
+         >>> enter_a = types.lookup_special_method(a, "__enter__")
+         >>> enter_b = types.lookup_special_method(b, "__enter__")
+         >>> enter_a(a)
+         'A.__enter__'
+         >>> enter_b(b)
+         'B.__enter__'
+
+     For other descriptors (property, etc.), it returns the result of the
+     descriptor's ``__get__`` method. Returns ``None`` if the method is not
+     found.
+
+   .. versionadded:: next
+
 
 Coroutine Utility Functions
 ---------------------------
