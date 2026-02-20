@@ -30,6 +30,7 @@ import threading
 import time
 from collections import namedtuple
 from dataclasses import dataclass
+from enum import Enum
 from operator import methodcaller
 from typing import NamedTuple
 
@@ -241,6 +242,25 @@ def instantiate_typing_namedtuple():
     for _ in range(1000 * WORK_SCALE):
         obj = MyTypingNamedTuple(x=1, y=2, z=3)
 
+
+class MyEnum(Enum):
+    X = 1
+    Y = 2
+    Z = 3
+
+@register_benchmark
+def enum_attr():
+    for _ in range(1000 * WORK_SCALE):
+        MyEnum.X
+        MyEnum.Y
+        MyEnum.Z
+
+@register_benchmark
+def enum_value():
+    for _ in range(1000 * WORK_SCALE):
+        MyEnum.X.value
+        MyEnum.Y.value
+        MyEnum.Z.value
 
 @register_benchmark
 def deepcopy():
