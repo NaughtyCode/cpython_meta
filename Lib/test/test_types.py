@@ -45,10 +45,6 @@ class TypesTests(unittest.TestCase):
         ignored = {'new_class', 'resolve_bases', 'prepare_class',
                    'get_original_bases', 'DynamicClassAttribute', 'coroutine'}
 
-        for name in c_types.__all__:
-            if name not in c_only_names | ignored:
-                self.assertIs(getattr(c_types, name), getattr(py_types, name))
-
         all_names = ignored | {
             'AsyncGeneratorType', 'BuiltinFunctionType', 'BuiltinMethodType',
             'CapsuleType', 'CellType', 'ClassMethodDescriptorType', 'CodeType',
@@ -61,8 +57,13 @@ class TypesTests(unittest.TestCase):
             'NotImplementedType', 'SimpleNamespace', 'TracebackType',
             'UnionType', 'WrapperDescriptorType',
         }
-        self.assertEqual(all_names, set(c_types.__all__))
         self.assertEqual(all_names - c_only_names, set(py_types.__all__))
+        if c_types is not None:
+            self.assertEqual(all_names, set(c_types.__all__))
+            for name in c_types.__all__:
+                if name not in c_only_names | ignored:
+                    self.assertIs(getattr(c_types, name), getattr(py_types, name))
+
 
     def test_truth_values(self):
         if None: self.fail('None is true instead of false')

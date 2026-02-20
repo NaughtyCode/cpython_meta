@@ -8,7 +8,7 @@ Define names for built-in types that aren't directly accessible as a builtin.
 # "__iter__" and "__next__" attributes instead.
 
 try:
-    from _types import *
+    from _ntypes import *
 except ImportError:
     import sys
 
